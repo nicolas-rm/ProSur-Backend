@@ -15,6 +15,7 @@ import { CreateItemDto } from './DTO/create-item';
 
 @Controller('items')
 export class ItemsController {
+    // Constructor para inicializar ...
     constructor(private readonly itemsService: ItemsService) {}
 
     // Metodo para obtener todos los items

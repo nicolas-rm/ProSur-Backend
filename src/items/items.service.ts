@@ -1,5 +1,5 @@
 // src/items/items.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Item } from './item.model';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -10,44 +10,64 @@ export class ItemsService {
 
     // Metodo para obtener todos los items
     async findAll(): Promise<Item[]> {
-        return await this.prisma.item.findMany();
+        try {
+            return await this.prisma.item.findMany();
+        } catch (error) {
+            throw new BadRequestException('Obtener items falló.');
+        }
     }
 
     // Metodo para obtener un item por id
     async findOne(id: number): Promise<Item> {
-        const findOneItem = await this.prisma.item.findUnique({ where: { id } });
+        try {
+            const item = await this.prisma.item.findUnique({ where: { id } });
 
-        if (!findOneItem) {
-            throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+            if (!item) {
+                throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+            }
+
+            return item;
+        } catch (error) {
+            throw new BadRequestException('Obtener item falló.');
         }
-
-        return findOneItem;
     }
 
     // Metodo para crear un item
     async create(item: Item): Promise<Item> {
-        return await this.prisma.item.create({ data: item });
+        try {
+            return await this.prisma.item.create({ data: item });
+        } catch (error) {
+            throw new BadRequestException('Crear item falló.');
+        }
     }
 
     // Metodo para actualizar un item
     async update(id: number, updateData: Partial<Item>): Promise<Item> {
-        const updateItem = await this.prisma.item.update({ where: { id }, data: updateData });
+        try {
+            const updatedItem = await this.prisma.item.update({ where: { id }, data: updateData });
 
-        if (!updateItem) {
-            throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+            if (!updatedItem) {
+                throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+            }
+
+            return updatedItem;
+        } catch (error) {
+            throw new BadRequestException('Actualizar item falló.');
         }
-
-        return updateItem;
     }
 
     // Metodo para eliminar un item
     async delete(id: number): Promise<Item> {
-        const deleteItem = await this.prisma.item.delete({ where: { id } });
+        try {
+            const deletedItem = await this.prisma.item.delete({ where: { id } });
 
-        if (!deleteItem) {
-            throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+            if (!deletedItem) {
+                throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+            }
+
+            return deletedItem;
+        } catch (error) {
+            throw new BadRequestException('Eliminar item falló.');
         }
-
-        return deleteItem;
     }
 }
