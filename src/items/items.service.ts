@@ -13,6 +13,12 @@ export class ItemsService {
         try {
             return await this.prisma.item.findMany();
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Obtener items falló.');
         }
     }
@@ -28,6 +34,12 @@ export class ItemsService {
 
             return item;
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Obtener item falló.');
         }
     }
@@ -37,6 +49,12 @@ export class ItemsService {
         try {
             return await this.prisma.item.create({ data: item });
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Crear item falló.');
         }
     }
@@ -52,6 +70,12 @@ export class ItemsService {
 
             return updatedItem;
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Actualizar item falló.');
         }
     }
@@ -67,6 +91,12 @@ export class ItemsService {
 
             return deletedItem;
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Eliminar item falló.');
         }
     }
