@@ -49,6 +49,7 @@ export class ItemsController {
         // Verificar que el item exista
         const item = await this.itemsService.findOne(id);
 
+        // Validar que el item exista
         if (!item) throw new BadRequestException('Item no encontrado.');
 
         return await this.itemsService.update(id, updateItemDto);
@@ -60,21 +61,11 @@ export class ItemsController {
         // Validar que el id sea proporcionado
         if (!id) throw new BadRequestException('Id es requerido.');
 
+        // Verificar que el item exista
+        const item = await this.itemsService.findOne(id);
+
+        if (!item) throw new BadRequestException('Item no encontrado.');
+
         return await this.itemsService.delete(id);
     }
-
-    // Metodo para verificar que un item existe
-    // verifyItem(id: number, itemDTO: UpdateItemDto | CreateItemDto): void {
-    //     // Validar que el id del item y el id del DTO sean proporcionados
-    //     if (!id || isNaN(id)) throw new BadRequestException('Id es requerido.');
-    //     if (!itemDTO.id) throw new BadRequestException('Id es requerido.');
-
-    //     // Validar que el id del item a actualizar sea el mismo que el id del item en el DTO
-    //     if (id !== itemDTO.id) throw new BadRequestException('Id no coincide.');
-
-    //     // Verificar que el item exista
-    //     const item = await this.itemsService.findOne(id);
-
-    //     if (!item) throw new BadRequestException('Item no encontrado.');
-    // }
 }
