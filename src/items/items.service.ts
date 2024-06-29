@@ -1,48 +1,53 @@
 // src/items/items.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Item } from './item.model';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ItemsService {
-    private items: Item[] = [];
-    private idCounter = 1;
+    // Constructor para inicializar ...
+    constructor(private prisma: PrismaService) {}
 
     // Metodo para obtener todos los items
-    findAll(): Item[] {
-        return this.items;
+    async findAll(): Promise<Item[]> {
+        return await this.prisma.item.findMany();
     }
 
     // Metodo para obtener un item por id
-    findOne(id: number): Item {
-        const item = this.items.find((item) => item.id === id);
-        if (!item) {
-            throw new NotFoundException(`Item with id ${id} not found`);
+    async findOne(id: number): Promise<Item> {
+        const findOneItem = await this.prisma.item.findUnique({ where: { id } });
+
+        if (!findOneItem) {
+            throw new NotFoundException(`Item con id: ${id} no encontrado.`);
         }
-        return item;
+
+        return findOneItem;
     }
 
     // Metodo para crear un item
-    create(item: Partial<Item>): Item {
-        const newItem = { ...item, id: this.idCounter++ } as Item;
-        this.items.push(newItem);
-        return newItem;
+    async create(item: Item): Promise<Item> {
+        return await this.prisma.item.create({ data: item });
     }
 
     // Metodo para actualizar un item
-    update(id: number, updateData: Partial<Item>): Item {
-        const item = this.findOne(id);
-        const updatedItem = { ...item, ...updateData };
-        const index = this.items.findIndex((item) => item.id === id);
-        this.items[index] = updatedItem;
-        return updatedItem;
+    async update(id: number, updateData: Partial<Item>): Promise<Item> {
+        const updateItem = await this.prisma.item.update({ where: { id }, data: updateData });
+
+        if (!updateItem) {
+            throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+        }
+
+        return updateItem;
     }
 
     // Metodo para eliminar un item
-    delete(id: number): void {
-        const index = this.items.findIndex((item) => item.id === id);
-        if (index === -1) {
-            throw new NotFoundException(`Item with id ${id} not found`);
+    async delete(id: number): Promise<Item> {
+        const deleteItem = await this.prisma.item.delete({ where: { id } });
+
+        if (!deleteItem) {
+            throw new NotFoundException(`Item con id: ${id} no encontrado.`);
         }
-        this.items.splice(index, 1);
+
+        return deleteItem;
     }
 }

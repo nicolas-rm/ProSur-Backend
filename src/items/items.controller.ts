@@ -1,7 +1,17 @@
 // src/items/items.controller.ts
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+
+// NestJS
+import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
+
+// Servicios
 import { ItemsService } from './items.service';
+
+// Modelos
 import { Item } from './item.model';
+
+// DTOs
+import { UpdateItemDto } from './DTO/update-item';
+import { CreateItemDto } from './DTO/create-item';
 
 @Controller('items')
 export class ItemsController {
@@ -9,31 +19,31 @@ export class ItemsController {
 
     // Metodo para obtener todos los items
     @Get()
-    findAll(): Item[] {
-        return this.itemsService.findAll();
+    async findAll(): Promise<Item[]> {
+        return await this.itemsService.findAll();
     }
 
     // Metodo para obtener un item por id
     @Get(':id')
-    findOne(@Param('id') id: string): Item {
-        return this.itemsService.findOne(Number(id));
+    async findOne(@Param('id', ParseIntPipe) id: number): Promise<Item> {
+        return await this.itemsService.findOne(id);
     }
 
     // Metodo para crear un item
     @Post()
-    create(@Body() item: Partial<Item>): Item {
-        return this.itemsService.create(item);
+    async create(@Body() createItemDto: CreateItemDto): Promise<Item> {
+        return await this.itemsService.create(createItemDto);
     }
 
     // Metodo para actualizar un item
     @Put(':id')
-    update(@Param('id') id: string, @Body() updateData: Partial<Item>): Item {
-        return this.itemsService.update(Number(id), updateData);
+    async update(@Param('id', ParseIntPipe) id: number, @Body() updateItemDto: UpdateItemDto): Promise<Item> {
+        return await this.itemsService.update(id, updateItemDto);
     }
 
     // Metodo para eliminar un item
     @Delete(':id')
-    delete(@Param('id') id: string): void {
-        this.itemsService.delete(Number(id));
+    async delete(@Param('id', ParseIntPipe) id: number): Promise<Item> {
+        return await this.itemsService.delete(id);
     }
 }

@@ -1,7 +1,7 @@
 // src/items/item.model.ts
 export class Item {
-    id: number;
+    id?: number;
     name: string;
-    description: string;
+    description?: string;
     price: number;
 }
