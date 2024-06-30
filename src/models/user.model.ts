@@ -1,12 +1,12 @@
 import { Order } from './index.models';
 
-export class Item {
+export class User {
     id: number;
     createdAt: Date;
     updatedAt: Date;
-    description?: string;
+    email: string;
+    password: string;
     name: string;
-    order?: Order;
-    orderId?: number;
-    price: number;
+    lastName: string;
+    orders?: Order[];
 }
