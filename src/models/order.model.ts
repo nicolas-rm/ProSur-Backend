@@ -4,7 +4,7 @@ export class Order {
     id: number;
     createdAt: Date;
     updatedAt: Date;
-    items: Item[];
+    items?: Item[];
     total: number;
     user?: User;
     userId?: number;

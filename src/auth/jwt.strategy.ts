@@ -6,13 +6,13 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
         super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el JWT del encabezado de autorización
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el JWT del encabezado de autorización.
             ignoreExpiration: false,
-            secretOrKey: 'YOUR_JWT_SECRET', // Cambia 'YOUR_JWT_SECRET' por una cadena secreta segura
+            secretOrKey: 'YOUR_JWT_SECRET', // Clave secreta utilizada para verificar los tokens JWT.
         });
     }
 
-    // Valida el token JWT
+    // Valida el token JWT.
     async validate(payload: any) {
         return { userId: payload.sub, username: payload.username };
     }

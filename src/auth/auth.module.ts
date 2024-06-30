@@ -11,11 +11,11 @@ import { AuthController } from './auth.controller';
     imports: [
         PassportModule,
         JwtModule.register({
-            secret: 'YOUR_JWT_SECRET', // Cambia 'YOUR_JWT_SECRET' por una cadena secreta segura.
-            signOptions: { expiresIn: '60m' }, // Configura la duración del token JWT.
+            secret: 'YOUR_JWT_SECRET', // Clave secreta utilizada para firmar los tokens JWT.
+            signOptions: { expiresIn: '60m' }, // Tiempo de expiración de los tokens JWT.
         }),
     ],
-    providers: [AuthService, PrismaService, LocalStrategy, JwtStrategy],
-    controllers: [AuthController],
+    providers: [AuthService, PrismaService, LocalStrategy, JwtStrategy], // Servicios y estrategias que este módulo provee.
+    controllers: [AuthController], // Controlador que maneja las rutas relacionadas con la autenticación.
 })
 export class AuthModule {}
