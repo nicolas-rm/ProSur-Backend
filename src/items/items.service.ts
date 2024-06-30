@@ -1,6 +1,6 @@
 // src/items/items.service.ts
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Item } from './item.model';
+import { Item } from '../models/index.models';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()

@@ -7,7 +7,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, BadReque
 import { ItemsService } from './items.service';
 
 // Modelos
-import { Item } from './item.model';
+import { Item } from '../models/index.models';
 
 // DTOs
 import { UpdateItemDto } from './DTO/update-item';
@@ -49,7 +49,7 @@ export class ItemsController {
         // Verificar que el item exista
         const item = await this.itemsService.findOne(id);
 
-        // Validar que el item exista
+        // Validación si no se encuentra el item
         if (!item) throw new BadRequestException('Item no encontrado.');
 
         return await this.itemsService.update(id, updateItemDto);
@@ -64,6 +64,7 @@ export class ItemsController {
         // Verificar que el item exista
         const item = await this.itemsService.findOne(id);
 
+        // Validación si no se encuentra el item
         if (!item) throw new BadRequestException('Item no encontrado.');
 
         return await this.itemsService.delete(id);
