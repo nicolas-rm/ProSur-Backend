@@ -14,7 +14,7 @@ export class CreateUserDto {
     @IsNotEmpty({ message: 'Name es requerido' })
     name: string;
 
-    @IsString()
+    @IsString({ message: 'LastName debe ser un texto' })
     @IsNotEmpty({ message: 'LastName es requerido' })
     lastName: string;
 }
