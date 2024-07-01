@@ -1,8 +1,8 @@
 import { Controller, Request, Post, UseGuards, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +11,7 @@ export class AuthController {
     // Endpoint para el login, protegido con el guardia LocalAuthGuard.
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Request() req): Promise<{ access_token: string }> {
+    async login(@Request() req) {
         return this.authService.login(req.user);
     }
 
