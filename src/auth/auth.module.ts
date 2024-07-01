@@ -11,7 +11,7 @@ import { AuthController } from './auth.controller';
     imports: [
         PassportModule,
         JwtModule.register({
-            secret: 'YOUR_JWT_SECRET', // Clave secreta utilizada para firmar los tokens JWT.
+            secret: process.env.JWT_SECRET, // Clave secreta para firmar los tokens JWT.
             signOptions: { expiresIn: '60m' }, // Tiempo de expiración de los tokens JWT.
         }),
     ],
