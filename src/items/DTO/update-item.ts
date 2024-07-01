@@ -1,12 +1,11 @@
-// src/items/dto/update-item.dto.ts
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+// src/items/dto/create-item.dto.ts
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 
-// DTO para actualizar un item
-// Se utiliza para validar los datos que se envian al actualizar un item
+// DTO para crear un item
+// Se utiliza para validar los datos que se envian al crear un item
 export class UpdateItemDto {
-    // // Validar id
-    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'Id es un número.' })
-    @IsOptional()
+    // Validar id
+    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'Id es requerido.' })
     id: number;
 
     // Validar name

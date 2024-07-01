@@ -10,8 +10,8 @@ import { ItemsService } from './items.service';
 import { Item } from '../models/index.models';
 
 // DTOs
-import { UpdateItemDto } from './DTO/update-item';
-import { CreateItemDto } from './DTO/create-item';
+import { UpdateItemDto } from './dto/update-item';
+import { CreateItemDto } from './dto/create-item';
 
 @Controller('items')
 export class ItemsController {

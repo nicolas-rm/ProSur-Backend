@@ -2,6 +2,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Item } from '../models/index.models';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateItemDto } from './dto/create-item';
+import { UpdateItemDto } from './dto/update-item';
 
 @Injectable()
 export class ItemsService {
@@ -45,7 +47,7 @@ export class ItemsService {
     }
 
     // Metodo para crear un item
-    async create(item: Item): Promise<Item> {
+    async create(item: CreateItemDto): Promise<Item> {
         try {
             return await this.prisma.item.create({ data: item });
         } catch (error) {
@@ -60,7 +62,7 @@ export class ItemsService {
     }
 
     // Metodo para actualizar un item
-    async update(id: number, updateData: Partial<Item>): Promise<Item> {
+    async update(id: number, updateData: UpdateItemDto): Promise<Item> {
         try {
             const updatedItem = await this.prisma.item.update({ where: { id }, data: updateData });
 
