@@ -7,14 +7,14 @@ import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, BadReque
 import { ItemsService } from './items.service';
 
 // Modelos
-import { Item } from '../models/index.models';
+import { Item } from '../../shared/models/index.models';
 
 // DTOs
-import { UpdateItemDto } from './dto/update-item';
-import { CreateItemDto } from './dto/create-item';
+import { UpdateItemDto } from './dtos/update-item';
+import { CreateItemDto } from './dtos/create-item';
 
 // Guards
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('items')
 @UseGuards(JwtAuthGuard) // Aplica el guard de autenticación a todas las rutas de este controlador

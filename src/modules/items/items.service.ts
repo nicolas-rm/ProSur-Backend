@@ -1,9 +1,9 @@
 // src/items/items.service.ts
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Item } from '../models/index.models';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateItemDto } from './dto/create-item';
-import { UpdateItemDto } from './dto/update-item';
+import { Item } from '../../shared/models/index.models';
+import { PrismaService } from 'src/shared/prisma/prisma.service';
+import { CreateItemDto } from './dtos/create-item';
+import { UpdateItemDto } from './dtos/update-item';
 
 @Injectable()
 export class ItemsService {

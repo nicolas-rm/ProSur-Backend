@@ -1,18 +1,14 @@
 // NestJS
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 // Modulos
-import { ItemsModule } from './items/items.module';
+import { ItemsModule } from './modules/items/items.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 // Prisma ORM
-import { PrismaService } from './prisma/prisma.service';
-
-// Modulos
-import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './auth/auth.module';
-
-// Configuración
-import { ConfigModule } from '@nestjs/config';
+import { PrismaService } from './shared/prisma/prisma.service';
+import { PrismaModule } from './shared/prisma/prisma.module';
 
 @Module({
     imports: [
