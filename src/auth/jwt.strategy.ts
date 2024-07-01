@@ -8,7 +8,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el JWT del encabezado de autorización.
             ignoreExpiration: false,
-            secretOrKey: 'YOUR_JWT_SECRET', // Clave secreta utilizada para verificar los tokens JWT.
+            secretOrKey: 'TOKEN_SECRET', // Clave secreta para verificar la firma del JWT.
         });
     }
 

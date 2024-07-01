@@ -1,7 +1,7 @@
 // src/items/items.controller.ts
 
 // NestJS
-import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, BadRequestException, UseGuards } from '@nestjs/common';
 
 // Servicios
 import { ItemsService } from './items.service';
@@ -13,7 +13,11 @@ import { Item } from '../models/index.models';
 import { UpdateItemDto } from './dto/update-item';
 import { CreateItemDto } from './dto/create-item';
 
+// Guards
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
 @Controller('items')
+@UseGuards(JwtAuthGuard) // Aplica el guard de autenticación a todas las rutas de este controlador
 export class ItemsController {
     // Constructor para inicializar ...
     constructor(private readonly itemsService: ItemsService) {}
