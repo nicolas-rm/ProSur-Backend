@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { ItemsController } from './items.controller';
 import { PrismaModule } from '../../shared/prisma/prisma.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [PrismaModule],
+    imports: [PrismaModule, AuthModule],
     controllers: [ItemsController],
     providers: [ItemsService],
 })

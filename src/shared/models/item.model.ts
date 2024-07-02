@@ -10,13 +10,3 @@ export class Item {
     orderId?: number;
     price: number;
 }
-
-// import { Order } from './index.models';
-
-// src/items/item.model.ts
-// export class Item {
-//     id?: number;
-//     name: string;
-//     description?: string;
-//     price: number;
-// }

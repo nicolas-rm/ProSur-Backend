@@ -15,15 +15,18 @@ import { CreateItemDto } from './dtos/create-item';
 
 // Guards
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles-guard.guard';
+import { Permissions } from '../auth/decorators/permissions.decorator';
 
 @Controller('items')
-@UseGuards(JwtAuthGuard) // Aplica el guard de autenticación a todas las rutas de este controlador
+@UseGuards(JwtAuthGuard, RolesGuard) // Proteger todos los métodos del controlador con JwtAuthGuard y RolesGuard
 export class ItemsController {
     // Constructor para inicializar ...
     constructor(private readonly itemsService: ItemsService) {}
 
     // Metodo para obtener todos los items
     @Get()
+    @Permissions('Item:read')
     async findAll(): Promise<Item[]> {
         return await this.itemsService.findAll();
     }

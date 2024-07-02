@@ -15,6 +15,7 @@ import { AuthController } from './auth.controller';
             signOptions: { expiresIn: '60m' }, // Tiempo de expiración de los tokens JWT.
         }),
     ],
+    exports: [AuthService], // Exporta el servicio de autenticación para que esté disponible en otros módulos.
     providers: [AuthService, PrismaService, LocalStrategy, JwtStrategy], // Servicios y estrategias que este módulo provee.
     controllers: [AuthController], // Controlador que maneja las rutas relacionadas con la autenticación.
 })

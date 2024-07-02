@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -13,15 +7,20 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// --- Modelos ---
+
 model User {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    email     String   @unique
-    password  String
-    name      String
-    lastName  String
-    orders    Order[]
+    id          Int          @id @default(autoincrement())
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    email       String       @unique
+    lastName    String
+    name        String
+    orders      Order[]
+    password    String
+    permissions Permission[]
+    roles       Role[]       @relation("userToRole")
+    userToRole  UserToRole[]
 }
 
 model Item {
@@ -30,7 +29,7 @@ model Item {
     updatedAt   DateTime @updatedAt
     description String?
     name        String
-    order       Order?   @relation(fields: [orderId], references: [id])
+    order       Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade) // Cascade para eliminar items si se elimina la orden
     orderId     Int?
     price       Float
 }
@@ -43,4 +42,41 @@ model Order {
     total     Float
     user      User?    @relation(fields: [userId], references: [id])
     userId    Int?
+}
+
+model Role {
+    id          Int          @id @default(autoincrement())
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    name        String       @unique
+    permissions Permission[]
+    users       User[]       @relation("userToRole")
+    userToRole  UserToRole[]
+}
+
+model Permission {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    canRead   Boolean  @default(false)
+    canWrite  Boolean  @default(false)
+    entity    String // Considera usar un enum para tipos de entidades
+    role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade) // Cascade para eliminar permisos si se elimina el rol
+    roleId    Int
+    user      User?    @relation(fields: [userId], references: [id])
+    userId    Int?
+
+    @@unique([roleId, entity])
+}
+
+model UserToRole {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+    roleId    Int
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    Int
+
+    @@unique([userId, roleId])
 }
