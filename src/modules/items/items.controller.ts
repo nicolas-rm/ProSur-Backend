@@ -16,34 +16,36 @@ import { CreateItemDto } from './dtos/create-item';
 // Guards
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles-guard.guard';
-import { Permissions } from '../auth/decorators/permissions.decorator';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
 
+// Decoradores
+import { Permissions } from '../auth/decorators/permissions.decorator';
 @Controller('items')
-@UseGuards(JwtAuthGuard, RolesGuard) // Proteger todos los métodos del controlador con JwtAuthGuard y RolesGuard
+@UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard) // Proteger todos los métodos del controlador con JwtAuthGuard, RolesGuard y PermissionsGuard
 export class ItemsController {
     // Constructor para inicializar ...
     constructor(private readonly itemsService: ItemsService) {}
 
-    // Metodo para obtener todos los items
+    // EndPoint para obtener todos los items
     @Get()
     @Permissions('Item:read')
     async findAll(): Promise<Item[]> {
         return await this.itemsService.findAll();
     }
 
-    // Metodo para obtener un item por id
+    // EndPoint para obtener un item por id
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number): Promise<Item> {
         return await this.itemsService.findOne(id);
     }
 
-    // Metodo para crear un item
+    // EndPoint para crear un item
     @Post()
     async create(@Body() createItemDto: CreateItemDto): Promise<Item> {
         return await this.itemsService.create(createItemDto);
     }
 
-    // Metodo para actualizar un item
+    // EndPoint para actualizar un item
     @Put(':id')
     async update(@Param('id', ParseIntPipe) id: number, @Body() updateItemDto: UpdateItemDto): Promise<Item> {
         // Validar que el id del item y el id del DTO sean proporcionados
@@ -62,7 +64,7 @@ export class ItemsController {
         return await this.itemsService.update(id, updateItemDto);
     }
 
-    // Metodo para eliminar un item
+    // EndPoint para eliminar un item
     @Delete(':id')
     async delete(@Param('id', ParseIntPipe) id: number): Promise<Item> {
         // Validar que el id sea proporcionado

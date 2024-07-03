@@ -8,20 +8,20 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-    // Endpoint para el login, protegido con el guardia LocalAuthGuard.
+    // EndPoint para el login, protegido con el guardia LocalAuthGuard.
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
         return this.authService.login(req.user);
     }
 
-    // Endpoint para el registro de usuarios.
+    // EndPoint para el registro de usuarios.
     @Post('register')
     async register(@Body() createUserDto: CreateUserDto) {
         return this.authService.register(createUserDto);
     }
 
-    // Endpoint para obtener el perfil del usuario, protegido con el guardia JwtAuthGuard.
+    // EndPoint para obtener el perfil del usuario, protegido con el guardia JwtAuthGuard.
     @UseGuards(JwtAuthGuard)
     @Post('profile')
     getProfile(@Request() req) {
