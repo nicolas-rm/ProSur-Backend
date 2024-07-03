@@ -9,7 +9,7 @@ export class LocalAuthGuard extends AuthGuard('local') {
 
         // Verificar que email y password estén presentes
         if (!email || !password) {
-            throw new UnauthorizedException('Email y Password son requeridos.');
+            throw new UnauthorizedException({ message: 'Email y password son requeridos.' });
         }
 
         // Llamar al método canActivate del padre (AuthGuard)
