@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
-import { User } from '../../shared/models/index.models';
+import { Permission, User } from '../../shared/models/index.models';
 import { CreateUserDto } from './dtos/create-user.dto';
 
 @Injectable()
@@ -132,7 +132,7 @@ export class AuthService {
     }
 
     // Método para obtener los permisos de un usuario
-    async getUserPermissions(userId: number): Promise<{ id: number; canWrite: boolean; canRead: boolean; entity: string }[] | null> {
+    async getUserPermissions(userId: number): Promise<Permission[] | null> {
         try {
             console.log('userId:', userId);
             const user = await this.prisma.user.findUnique({
@@ -142,7 +142,7 @@ export class AuthService {
 
             if (!user) return [];
 
-            return user.permissions.map((permission) => ({ id: permission.id, canWrite: permission.canWrite, canRead: permission.canRead, entity: permission.entity }));
+            return user.permissions.map((permission) => permission);
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {

@@ -28,7 +28,7 @@ export class ItemsController {
 
     // EndPoint para obtener todos los items
     @Get()
-    @Permissions('Item:read')
+    @Permissions('Item:read') // Proteger el método con el permiso 'Item:read'
     async findAll(): Promise<Item[]> {
         return await this.itemsService.findAll();
     }

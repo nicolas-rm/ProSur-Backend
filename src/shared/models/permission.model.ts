@@ -6,5 +6,5 @@ export class Permission {
     entity: string;
     canRead: boolean;
     canWrite: boolean;
-    role: Role;
+    role?: Role;
 }
