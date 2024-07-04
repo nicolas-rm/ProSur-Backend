@@ -132,16 +132,17 @@ export class AuthService {
     }
 
     // Método para obtener los permisos de un usuario
-    async getUserPermissions(userId: number): Promise<string[] | null> {
+    async getUserPermissions(userId: number): Promise<{ id: number; canWrite: boolean; canRead: boolean; entity: string }[] | null> {
         try {
+            console.log('userId:', userId);
             const user = await this.prisma.user.findUnique({
                 where: { id: userId },
-                select: { permissions: { select: { entity: true } } },
+                include: { permissions: true },
             });
 
             if (!user) return [];
 
-            return user.permissions.map((permission) => permission.entity);
+            return user.permissions.map((permission) => ({ id: permission.id, canWrite: permission.canWrite, canRead: permission.canRead, entity: permission.entity }));
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {
