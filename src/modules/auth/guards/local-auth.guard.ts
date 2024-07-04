@@ -20,7 +20,6 @@ export class LocalAuthGuard extends AuthGuard('local') {
         // Verificar si la autenticación fue exitosa antes de intentar iniciar sesión
         if (result) {
             return new Promise<boolean>((resolve, reject) => {
-                console.log('LogIn user:', request);
                 request.logIn(request.user, (err) => {
                     if (err) {
                         console.error('LogIn error:', err);

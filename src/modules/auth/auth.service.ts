@@ -13,7 +13,7 @@ export class AuthService {
     ) {}
 
     // Valida si un usuario existe en la base de datos
-    async findOne(email: string): Promise<User | null> {
+    async findOne(email?: string): Promise<User | null> {
         try {
             const user = await this.prisma.user.findUnique({ where: { email } });
             return user;
@@ -25,6 +25,22 @@ export class AuthService {
 
             // Mensaje de error personalizado
             throw new BadRequestException('Verificar usuario falló.');
+        }
+    }
+
+    // Valida si el usuario autenticado existe (id)
+    async findAuth(id: number): Promise<User | null> {
+        try {
+            const user = await this.prisma.user.findUnique({ where: { id } });
+            return user;
+        } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
+            throw new BadRequestException('Validar usuario por id falló.');
         }
     }
 
