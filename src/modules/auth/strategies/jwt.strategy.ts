@@ -21,6 +21,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // Valida el token JWT.
     async validate(payload: Payload) {
+        // console.log('Payload:', payload);
+        // throw new ForbiddenException('Vali
         return { userId: payload.sub, username: payload.username, roles: payload.roles };
     }
 }

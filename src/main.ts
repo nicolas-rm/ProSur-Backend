@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
+import * as session from 'express-session'; // Importa el módulo express-session
+import * as passport from 'passport';
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     // Habilitar la validación de datos y forzar el uso de DTOs
@@ -17,6 +20,19 @@ async function bootstrap() {
             errorHttpStatusCode: 400,
         }),
     );
+
+    app.use(
+        session({
+            secret: 'your-secret-key', // Cambia esto por una clave secreta segura
+            resave: false, // No guardar la sesión si no se ha modificado
+            saveUninitialized: false, // No guardar una sesión vacía
+            // cookie: { maxAge: 3600000 }, // Opcional: Configurar tiempo de vida de la cookie
+        }),
+    );
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
     await app.listen(3000);
 }
 bootstrap();

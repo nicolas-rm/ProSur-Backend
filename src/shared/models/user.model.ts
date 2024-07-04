@@ -9,5 +9,5 @@ export class User {
     name: string;
     lastName: string;
     orders?: Order[] = [];
-    roles: Role[] = [];
+    roles?: Role[] = [];
 }

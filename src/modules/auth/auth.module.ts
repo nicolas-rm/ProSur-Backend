@@ -9,7 +9,7 @@ import { AuthController } from './auth.controller';
 
 @Module({
     imports: [
-        PassportModule,
+        PassportModule.register({ session: true }), // Habilita el uso de sesiones con Passport.
         JwtModule.register({
             secret: process.env.JWT_SECRET, // Clave secreta para firmar los tokens JWT.
             signOptions: { expiresIn: '60m' }, // Tiempo de expiración de los tokens JWT.

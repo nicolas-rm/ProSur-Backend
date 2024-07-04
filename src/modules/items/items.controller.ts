@@ -15,13 +15,13 @@ import { CreateItemDto } from './dtos/create-item';
 
 // Guards
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles-guard.guard';
-import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RolesAuthGuard } from '../auth/guards/roles-auth.guard';
+import { PermissionsAuthGuard } from '../auth/guards/permissions-auth.guard';
 
 // Decoradores
 import { Permissions } from '../auth/decorators/permissions.decorator';
 @Controller('items')
-@UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard) // Proteger todos los métodos del controlador con JwtAuthGuard, RolesGuard y PermissionsGuard
+@UseGuards(JwtAuthGuard, RolesAuthGuard, PermissionsAuthGuard) // Proteger todos los métodos del controlador con JwtAuthGuard, RolesAuthGuard y PermissionsAuthGuard
 export class ItemsController {
     // Constructor para inicializar ...
     constructor(private readonly itemsService: ItemsService) {}

@@ -1,9 +1,9 @@
 // src/auth/local.strategy.ts
-
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
+import { User } from 'src/shared/models/index.models';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -12,7 +12,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     }
 
     // Valida al usuario con el servicio de autenticación.
-    async validate(email: string, password: string): Promise<any> {
+    async validate(email: string, password: string): Promise<User> {
         if (!email || !password) {
             throw new UnauthorizedException({ message: 'Email y Password son requeridos.' });
         }
