@@ -5,6 +5,19 @@ const prisma = new PrismaClient();
 
 async function seed() {
     try {
+        // Crear roles si no existen
+        const adminRole = await prisma.role.upsert({
+            where: { name: 'admin' },
+            update: {},
+            create: { name: 'admin' },
+        });
+
+        const userRole = await prisma.role.upsert({
+            where: { name: 'user' },
+            update: {},
+            create: { name: 'user' },
+        });
+
         // Crear usuarios de ejemplo
         const user1 = await prisma.user.create({
             data: {
@@ -13,12 +26,12 @@ async function seed() {
                 name: 'John',
                 password: await bcrypt.hash('123456', 10),
                 roles: {
-                    connect: { name: 'admin' }, // Conectar el usuario al rol de admin
+                    connect: { id: adminRole.id }, // Conectar el usuario al rol de admin
                 },
                 permissions: {
                     create: [
-                        { canRead: true, canWrite: true, entity: 'Item', roleId: 1 }, // Permiso para leer y escribir en Items
-                        { canRead: true, canWrite: false, entity: 'Order', roleId: 1 }, // Permiso solo para leer en Orders
+                        { canRead: true, canWrite: true, entity: 'Item', roleId: adminRole.id }, // Permiso para leer y escribir en Items
+                        { canRead: true, canWrite: false, entity: 'Order', roleId: adminRole.id }, // Permiso solo para leer en Orders
                     ],
                 },
             },
@@ -35,11 +48,11 @@ async function seed() {
                 name: 'Jane',
                 password: await bcrypt.hash('123456', 10),
                 roles: {
-                    connect: { name: 'user' }, // Conectar el usuario al rol de user
+                    connect: { id: userRole.id }, // Conectar el usuario al rol de user
                 },
                 permissions: {
                     create: [
-                        { canRead: true, canWrite: false, entity: 'Item', roleId: 2 }, // Permiso solo para leer en Items
+                        { canRead: true, canWrite: false, entity: 'Item', roleId: userRole.id }, // Permiso solo para leer en Items
                     ],
                 },
             },
