@@ -87,14 +87,23 @@ export class AuthService {
     // Registra un nuevo usuario en la base de datos
     async register(userDto: CreateUserDto): Promise<User | null> {
         try {
-            const hashedPassword = await bcrypt.hash(userDto.password, 10);
-            const user = await this.prisma.user.create({
-                data: {
-                    ...userDto,
-                    password: hashedPassword,
-                },
+            // Transacción para crear un usuario
+            const result = await this.prisma.$transaction(async (prisma) => {
+                // Encriptar la contraseña del usuario
+                const hashedPassword = await bcrypt.hash(userDto.password, 10);
+
+                // Crear usuario
+                const user = await prisma.user.create({
+                    data: {
+                        ...userDto,
+                        password: hashedPassword,
+                    },
+                });
+
+                return user;
             });
-            return user;
+
+            return result;
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {

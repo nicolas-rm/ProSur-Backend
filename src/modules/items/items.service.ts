@@ -49,7 +49,15 @@ export class ItemsService {
     // Metodo para crear un item
     async create(item: CreateItemDto): Promise<Item> {
         try {
-            return await this.prisma.item.create({ data: item });
+            // Transacción para crear un item
+            const result = await this.prisma.$transaction(async (prisma) => {
+                // Crear item
+                const createdItem = await prisma.item.create({ data: item });
+
+                return createdItem;
+            });
+
+            return result;
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {
@@ -64,13 +72,23 @@ export class ItemsService {
     // Metodo para actualizar un item
     async update(id: number, updateData: UpdateItemDto): Promise<Item> {
         try {
-            const updatedItem = await this.prisma.item.update({ where: { id }, data: updateData });
+            // Transacción para actualizar un item
+            const result = await this.prisma.$transaction(async (prisma) => {
+                // Actualizar item
+                const updatedItem = await prisma.item.update({
+                    where: { id },
+                    data: updateData,
+                });
 
-            if (!updatedItem) {
-                throw new NotFoundException(`Item con id: ${id} no encontrado.`);
-            }
+                // Si no se actualiza el item, se lanza una excepción
+                if (!updatedItem) {
+                    throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+                }
 
-            return updatedItem;
+                return updatedItem;
+            });
+
+            return result;
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {
@@ -78,20 +96,27 @@ export class ItemsService {
             }
 
             // Mensaje de error personalizado
-            throw new BadRequestException('Actualizar item falló.');
+            throw new BadRequestException('Eliminar item falló.');
         }
     }
 
     // Metodo para eliminar un item
     async delete(id: number): Promise<Item> {
         try {
-            const deletedItem = await this.prisma.item.delete({ where: { id } });
+            // Transacción para eliminar un item
+            const result = await this.prisma.$transaction(async (prisma) => {
+                // Eliminar item
+                const deletedItem = await prisma.item.delete({ where: { id } });
 
-            if (!deletedItem) {
-                throw new NotFoundException(`Item con id: ${id} no encontrado.`);
-            }
+                // Si no se elimina el item, se lanza una excepción
+                if (!deletedItem) {
+                    throw new NotFoundException(`Item con id: ${id} no encontrado.`);
+                }
 
-            return deletedItem;
+                return deletedItem;
+            });
+
+            return result;
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {
