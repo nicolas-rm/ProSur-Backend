@@ -17,4 +17,8 @@ export class CreateItemDto {
     // Validar price
     @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'Price es requerido.' })
     price: number;
+
+    // Validar categoryId
+    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'CategoryId es requerido.' })
+    categoryId: number;
 }

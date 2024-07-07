@@ -12,3 +12,6 @@ export { Role } from './role.model';
 
 // Modelo de Permisos
 export { Permission } from './permission.model';
+
+// Modelo de Categoría
+export { Category } from './category.model';

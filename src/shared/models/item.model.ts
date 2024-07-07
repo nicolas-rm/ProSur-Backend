@@ -1,4 +1,4 @@
-import { Order } from './index.models';
+import { Order, Category } from './index.models';
 
 export class Item {
     id: number | null;
@@ -9,4 +9,6 @@ export class Item {
     order?: Order;
     orderId?: number;
     price: number;
+    categoryId?: number;
+    category?: Category[];
 }

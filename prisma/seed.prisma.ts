@@ -67,12 +67,6 @@ async function seed() {
             data: {
                 total: 100.0,
                 userId: user1.id,
-                items: {
-                    create: [
-                        { name: 'Item 1', price: 50.0 },
-                        { name: 'Item 2', price: 50.0 },
-                    ],
-                },
             },
         });
 
@@ -80,12 +74,6 @@ async function seed() {
             data: {
                 total: 75.0,
                 userId: user2.id,
-                items: {
-                    create: [
-                        { name: 'Item 3', price: 25.0 },
-                        { name: 'Item 4', price: 50.0 },
-                    ],
-                },
             },
         });
 

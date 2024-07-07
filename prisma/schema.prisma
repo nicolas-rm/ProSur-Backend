@@ -32,6 +32,8 @@ model Item {
     order       Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade) // Cascade para eliminar items si se elimina la orden
     orderId     Int?
     price       Float
+    categoryId  Int
+    category    Category @relation(fields: [categoryId], references: [id])
 }
 
 model Order {
@@ -79,4 +81,14 @@ model UserToRole {
     userId    Int
 
     @@unique([userId, roleId])
+}
+
+// --- Modelos ---
+model Category {
+    id          Int      @id @default(autoincrement())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    name        String
+    description String?
+    items       Item[]
 }
