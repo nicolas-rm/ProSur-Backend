@@ -16,10 +16,10 @@ import { CategoriesModule } from './modules/categories/categories.module';
         ItemsModule,
         PrismaModule,
         AuthModule,
+        CategoriesModule,
         ConfigModule.forRoot({
             isGlobal: true, // Hace que la configuración esté disponible globalmente
         }),
-        CategoriesModule,
     ],
     controllers: [],
     providers: [PrismaService],

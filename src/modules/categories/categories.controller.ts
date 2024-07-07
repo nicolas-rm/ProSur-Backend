@@ -29,8 +29,9 @@ export class CategoriesController {
 
     // EndPoint para obtener todos los items
     @Get()
-    @Permissions('Item:read') // Proteger el método con el permiso 'Item:read'
+    @Permissions('Category:read') // Proteger el método con el permiso 'Item:read'
     async findAll(): Promise<Category[]> {
+        console.log('Consultando todas las categorias');
         return await this.categoriesService.findAll();
     }
 
