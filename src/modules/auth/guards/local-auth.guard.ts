@@ -14,18 +14,14 @@ export class LocalAuthGuard extends AuthGuard('local') {
 
         // Llamar al método canActivate del padre (AuthGuard) para la autenticación
         const result = (await super.canActivate(context)) as boolean;
-        console.log('Auth result:', result);
-        console.log('User after auth:', request.user);
 
         // Verificar si la autenticación fue exitosa antes de intentar iniciar sesión
         if (result) {
             return new Promise<boolean>((resolve, reject) => {
                 request.logIn(request.user, (err) => {
                     if (err) {
-                        console.error('LogIn error:', err);
                         reject(new UnauthorizedException('No se pudo iniciar sesión'));
                     } else {
-                        console.log('User logged in:', request.user);
                         resolve(true);
                     }
                 });

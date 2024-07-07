@@ -13,7 +13,7 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
-        // Console.log()
+        console.log('\nIniciando Sesesion');
         return this.authService.login(req.user);
     }
 

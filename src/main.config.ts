@@ -11,6 +11,14 @@ export function MainConfigurations(app) {
 }
 
 function configurationMiddleware(app) {
+    // Configurar el uso del cors
+    app.enableCors({
+        origin: 'http://localhost:4200', // El origen de tu frontend
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+    });
+
+    // Configurar la sesión del usuario
     app.use(
         session({
             secret: 'your-secret-key', // Cambia esto por una clave secreta segura

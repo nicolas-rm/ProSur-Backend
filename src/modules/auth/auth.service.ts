@@ -65,11 +65,17 @@ export class AuthService {
     }
 
     // Genera un token JWT para el usuario autenticado
-    async login(user: User): Promise<{ access_token: string } | null> {
+    async login(user: User): Promise<{ token: string; user: User; id: number } | null> {
         try {
+            /* 
+            id: number; // ID único del usuario
+    token: string; // Token de autenticación
+    user: any; // Información del usuario */
             const payload = { username: user.email, sub: user.id, roles: user.roles.map((role) => role.name) };
             return {
-                access_token: this.jwtService.sign(payload),
+                token: this.jwtService.sign(payload),
+                id: user.id,
+                user: user,
             };
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
