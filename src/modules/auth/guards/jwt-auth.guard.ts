@@ -8,7 +8,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     canActivate(context: ExecutionContext) {
         // Log de la solicitud entrante
         const request = context.switchToHttp().getRequest();
-        this.logger.log(`Solicitud entrante: ${request.method} ${request.url}`);
+        this.logger.log(`\n\nSolicitud entrante: ${request.method} ${request.url}`);
 
         // Llamamos a super.canActivate para que Passport haga su trabajo
         return super.canActivate(context);

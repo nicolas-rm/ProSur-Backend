@@ -13,7 +13,9 @@ export class CategoriesService {
     // Metodo para obtener todos las categorias
     async findAll(): Promise<Category[]> {
         try {
-            return await this.prisma.category.findMany();
+            return await this.prisma.category.findMany({
+                orderBy: { id: 'desc' },
+            });
         } catch (error) {
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {
