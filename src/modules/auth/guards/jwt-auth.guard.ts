@@ -1,21 +1,34 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-// Este guard utiliza la estrategia 'jwt' para autenticar las solicitudes
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-    // Verifica que se reciba un token JWT en la solicitud
+    private readonly logger = new Logger(JwtAuthGuard.name);
+
     canActivate(context: ExecutionContext) {
+        // Log de la solicitud entrante
+        const request = context.switchToHttp().getRequest();
+        this.logger.log(`Solicitud entrante: ${request.method} ${request.url}`);
+
+        // Llamamos a super.canActivate para que Passport haga su trabajo
         return super.canActivate(context);
     }
 
-    // Método para obtener el usuario autenticado
-    handleRequest(err, user) {
+    handleRequest(err, user, info) {
+        // Log del resultado de la autenticación
         if (err || !user) {
-            // Si hay un error o el usuario no está presente, lanzar una excepción
-            throw err || new UnauthorizedException({ message: 'No autorizado' });
+            this.logger.error(`Error de autenticación: ${err?.message || info?.message}`);
+        } else {
+            this.logger.log(`Usuario autenticado`); // Ajusta según tus datos de usuario
         }
-        // Si el usuario está presente, devolverlo
+
+        // Manejo de errores y token faltante
+        if (err) {
+            throw err; // Si hay un error de Passport, relanzarlo
+        } else if (!user) {
+            throw new UnauthorizedException({ message: 'Token de autenticación inválido o no proporcionado' }); // Si no hay usuario, lanzar UnauthorizedException
+        }
+
         return user;
     }
 }

@@ -149,7 +149,6 @@ export class AuthService {
     // Método para obtener los permisos de un usuario
     async getUserPermissions(userId: number): Promise<Permission[] | null> {
         try {
-            console.log('userId:', userId);
             const user = await this.prisma.user.findUnique({
                 where: { id: userId },
                 include: { permissions: true },
