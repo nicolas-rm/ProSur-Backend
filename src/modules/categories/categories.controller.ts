@@ -36,18 +36,21 @@ export class CategoriesController {
 
     // EndPoint para obtener un item por id
     @Get(':id')
+    @Permissions('Category:read') // Proteger el método con el permiso 'Item:read'
     async findOne(@Param('id', ParseIntPipe) id: number): Promise<Category> {
         return await this.categoriesService.findOne(id);
     }
 
     // EndPoint para crear un item
     @Post()
+    @Permissions('Category:write') // Proteger el método con el permiso 'Item:write'
     async create(@Body() createItemDto: CreateCategoryDto): Promise<Category> {
         return await this.categoriesService.create(createItemDto);
     }
 
     // EndPoint para actualizar un item
     @Put(':id')
+    @Permissions('Category:write') // Proteger el método con el permiso 'Item:write
     async update(@Param('id', ParseIntPipe) id: number, @Body() updateItemDto: UpdateCategoryDto): Promise<Category> {
         // Validar que el id del item y el id del DTO sean proporcionados
         if (!id || isNaN(id)) throw new BadRequestException('Id es requerido.');
@@ -67,6 +70,7 @@ export class CategoriesController {
 
     // EndPoint para eliminar un item
     @Delete(':id')
+    @Permissions('Category:write') // Proteger el método con el permiso 'Item:delete'
     async delete(@Param('id', ParseIntPipe) id: number): Promise<Category> {
         // Validar que el id sea proporcionado
         if (!id) throw new BadRequestException('Id es requerido.');
