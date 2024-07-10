@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PrismaService } from './shared/prisma/prisma.service';
 import { PrismaModule } from './shared/prisma/prisma.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
         ConfigModule.forRoot({
             isGlobal: true, // Hace que la configuración esté disponible globalmente
         }),
+        OrdersModule,
     ],
     controllers: [],
     providers: [PrismaService],
