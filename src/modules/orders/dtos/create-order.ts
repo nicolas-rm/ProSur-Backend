@@ -3,16 +3,16 @@ import { Type } from 'class-transformer';
 import { CreateOrderItemDTO } from './create-order-item';
 
 export class CreateOrderDTO {
-    @IsArray()
+    @IsArray({ message: 'Items debe ser un arreglo.' })
     @ValidateNested({ each: true })
     @Type(() => CreateOrderItemDTO)
     items: CreateOrderItemDTO[];
 
-    @IsNumber()
-    @IsNotEmpty()
+    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'Total es un número.' })
+    @IsNotEmpty({ message: 'Total es requerido.' })
     total: number;
 
-    @IsNumber()
-    @IsNotEmpty()
+    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'UserId es un número.' })
+    @IsNotEmpty({ message: 'UserId es requerido.' })
     userId: number;
 }

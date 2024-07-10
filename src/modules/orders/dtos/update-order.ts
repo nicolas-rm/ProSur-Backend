@@ -3,21 +3,21 @@ import { Type } from 'class-transformer';
 import { UpdateOrderItemDTO } from './update-order-item';
 
 export class UpdateOrderDTO {
-    @IsArray()
+    @IsArray({ message: 'Items debe ser un arreglo.' })
     @IsOptional()
     @ValidateNested({ each: true })
     @Type(() => UpdateOrderItemDTO)
     items?: UpdateOrderItemDTO[];
 
-    @IsNumber()
-    @IsNotEmpty()
+    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'Id es un número.' })
+    @IsNotEmpty({ message: 'Id es requerido.' })
     id: number;
 
-    @IsNumber()
+    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'Total es un número.' })
     @IsOptional()
     total?: number;
 
-    @IsNumber()
+    @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'UserId es un número.' })
     @IsOptional()
     userId?: number;
 }

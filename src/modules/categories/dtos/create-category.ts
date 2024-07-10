@@ -5,8 +5,8 @@ import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 // Se utiliza para validar los datos que se envian al crear un category
 export class CreateCategoryDto {
     // Validar name
-    @IsString({ message: 'Name es requerido.' })
-    @IsNotEmpty({ message: 'Name no puede estar vacío.' })
+    @IsString()
+    @IsNotEmpty({ message: 'Name es requerido.' })
     name: string;
 
     // Validar description
