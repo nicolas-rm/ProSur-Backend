@@ -14,14 +14,14 @@ import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
     imports: [
-        ItemsModule,
         PrismaModule,
         AuthModule,
         CategoriesModule,
+        ItemsModule,
+        OrdersModule,
         ConfigModule.forRoot({
             isGlobal: true, // Hace que la configuración esté disponible globalmente
         }),
-        OrdersModule,
     ],
     controllers: [],
     providers: [PrismaService],

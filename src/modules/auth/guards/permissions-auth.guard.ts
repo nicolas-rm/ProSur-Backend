@@ -34,11 +34,11 @@ export class PermissionsAuthGuard implements CanActivate {
             const permissionEntity = userPermissions.find((p) => permission.includes(p.entity));
 
             if (permissionEntity) {
-                // Verificar permisos según el tipo (lectura o escritura)
+                // Verificar permisos según que se requieren para el endpoint
                 if (permission.includes('read')) {
-                    return permissionEntity.canRead === true;
+                    return permissionEntity.canRead;
                 } else if (permission.includes('write')) {
-                    return permissionEntity.canWrite === true;
+                    return permissionEntity.canWrite;
                 }
             }
 
