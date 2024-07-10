@@ -9,7 +9,7 @@ import { Observable, of } from 'rxjs';
 @Injectable()
 export class AuthService {
     // Minutos de gracia para renovar el token
-    private readonly gracePeriodMinutes = 9000;
+    private readonly gracePeriodMinutes = 10;
 
     constructor(
         private prisma: PrismaService,
