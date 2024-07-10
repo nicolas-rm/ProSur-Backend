@@ -4,9 +4,13 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'src/shared/prisma/prisma.service';
 import { Permission, User } from '../../shared/models/index.models';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class AuthService {
+    // Minutos de gracia para renovar el token
+    private readonly gracePeriodMinutes = 9000;
+
     constructor(
         private prisma: PrismaService,
         private jwtService: JwtService,
@@ -67,10 +71,6 @@ export class AuthService {
     // Genera un token JWT para el usuario autenticado
     async login(user: User): Promise<{ token: string; user: User; id: number } | null> {
         try {
-            /* 
-            id: number; // ID único del usuario
-    token: string; // Token de autenticación
-    user: any; // Información del usuario */
             const payload = { username: user.email, sub: user.id, roles: user.roles.map((role) => role.name) };
             return {
                 token: this.jwtService.sign(payload),
@@ -166,5 +166,31 @@ export class AuthService {
             // Mensaje de error personalizado
             throw new BadRequestException('Obtener permisos de usuario falló.');
         }
+    }
+
+    validateToken(token: string): Observable<any> {
+        try {
+            const decodedToken = this.jwtService.verify(token);
+            return of(decodedToken);
+        } catch (e) {
+            throw new Error('Invalid token');
+        }
+    }
+
+    isTokenExpired(decodedToken: any): boolean {
+        const now = Math.floor(Date.now() / 1000);
+        return decodedToken.exp < now;
+    }
+
+    isWithinGracePeriod(decodedToken: any): boolean {
+        const now = Math.floor(Date.now() / 1000);
+        const expiredTime = decodedToken.exp;
+        return now - expiredTime <= this.gracePeriodMinutes * 60;
+    }
+
+    renewToken(userId: string): Observable<string> {
+        const payload = { userId };
+        const newToken = this.jwtService.sign(payload, { expiresIn: '1h' }); // Configura el tiempo de expiración según tus necesidades
+        return of(newToken);
     }
 }
