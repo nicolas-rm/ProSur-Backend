@@ -22,5 +22,6 @@ export class CreateItemDto {
     // Validar price
     @IsNumber({ allowNaN: false, allowInfinity: false }, { message: 'Price es un número.' })
     @IsNotEmpty({ message: 'Price es requerido.' })
+    // Convetir a número
     price: number;
 }

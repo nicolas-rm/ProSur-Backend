@@ -9,10 +9,10 @@ async function bootstrap() {
     // Habilitar la validación de datos y forzar el uso de DTOs
     app.useGlobalPipes(
         new ValidationPipe({
-            whitelist: true,
-            transform: true,
-            forbidNonWhitelisted: true,
-            errorHttpStatusCode: 400,
+            whitelist: true, // Sirve para que no se envíen datos que no estén en el DTO
+            transform: true, // Convierte los datos a los tipos que se especifican en el DTO
+            forbidNonWhitelisted: true, // Prohíbe el envío de datos que no estén en el DTO
+            errorHttpStatusCode: 400, // Cambia el código de error por defecto
         }),
     );
 
