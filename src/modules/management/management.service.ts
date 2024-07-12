@@ -11,16 +11,14 @@ export class ManagementService {
 
     // Metodo para Obtener productos vendidos en un periodo de fechas
     async getSoldProductsInPeriod(startDate: Date, endDate: Date) {
+        console.log('Consultado Informacion');
+        console.log(startDate);
+        console.log(endDate);
         try {
+            const where = startDate && endDate ? { order: { createdAt: { gte: startDate, lte: endDate } } } : {};
+
             const report = this.prisma.orderItem.findMany({
-                where: {
-                    order: {
-                        createdAt: {
-                            gte: startDate,
-                            lte: endDate,
-                        },
-                    },
-                },
+                where,
                 include: {
                     item: true,
                 },
@@ -54,10 +52,14 @@ export class ManagementService {
                 take: 3,
             });
 
+            console.log('report', report);
+
             // Obtener los datos de los productos
             const products = await this.prisma.item.findMany({
                 where: { id: { in: report.map((item) => item.itemId) } },
             });
+
+            console.log('products', products);
 
             // Mapear los datos de los productos
             const mappedReport = report.map((item) => {
@@ -68,6 +70,8 @@ export class ManagementService {
                     product,
                 };
             });
+
+            console.log('mappedReport', mappedReport);
 
             // Retornar el reporte
             return mappedReport;
