@@ -1,5 +1,5 @@
 // NestJS
-import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe, BadRequestException, UseGuards, Req } from '@nestjs/common';
 
 // Servicios
 import { OrdersService } from './orders.service';
@@ -28,25 +28,37 @@ export class OrdersController {
     // EndPoint para obtener todas las órdenes
     @Get()
     @Permissions('Order:read') // Proteger el método con el permiso 'Order:read'
-    async findAll(): Promise<Order[]> {
-        return await this.ordersService.findAll();
+    async findAll(@Req() req): Promise<Order[]> {
+        const userId = req.user.id; // Obtener el ID del usuario de la solicitud
+        if (!userId) throw new BadRequestException('Usuario Id no proporcionado para esta operacion');
+
+        return await this.ordersService.findAll(userId);
     }
 
     // EndPoint para obtener una orden por id
     @Get(':id')
-    async findOne(@Param('id', ParseIntPipe) id: number): Promise<Order> {
-        return await this.ordersService.findOne(id);
+    async findOne(@Param('id', ParseIntPipe) id: number, @Req() req): Promise<Order> {
+        const userId = req.user.id; // Obtener el ID del usuario de la solicitud
+        if (!userId) throw new BadRequestException('Usuario Id no proporcionado para esta operacion');
+
+        return await this.ordersService.findOne(id, userId);
     }
 
     // EndPoint para crear una orden
     @Post()
-    async create(@Body() createOrderDto: CreateOrderDTO): Promise<Order> {
-        return await this.ordersService.create(createOrderDto);
+    async create(@Body() createOrderDto: CreateOrderDTO, @Req() req): Promise<Order> {
+        const userId = req.user.id; // Obtener el ID del usuario de la solicitud
+        if (!userId) throw new BadRequestException('Usuario Id no proporcionado para esta operacion');
+
+        return await this.ordersService.create(createOrderDto, userId);
     }
 
     // EndPoint para actualizar una orden
     @Put(':id')
-    async update(@Param('id', ParseIntPipe) id: number, @Body() updateOrderDto: UpdateOrderDTO): Promise<Order> {
+    async update(@Param('id', ParseIntPipe) id: number, @Body() updateOrderDto: UpdateOrderDTO, @Req() req): Promise<Order> {
+        const userId = req.user.id; // Obtener el ID del usuario de la solicitud
+        if (!userId) throw new BadRequestException('Usuario Id no proporcionado para esta operacion');
+
         // Validar que el id de la orden y el id del DTO sean proporcionados
         if (!id || isNaN(id)) throw new BadRequestException('Id es requerido.');
         if (!updateOrderDto || isNaN(updateOrderDto.id)) throw new BadRequestException('Id del DTO es requerido.');
@@ -55,26 +67,29 @@ export class OrdersController {
         if (id !== updateOrderDto.id) throw new BadRequestException('Id no coincide.');
 
         // Verificar que la orden exista
-        const order = await this.ordersService.findOne(id);
+        const order = await this.ordersService.findOne(id, userId);
 
         // Validación si no se encuentra la orden
         if (!order) throw new BadRequestException('Orden no encontrada.');
 
-        return await this.ordersService.update(id, updateOrderDto);
+        return await this.ordersService.update(id, updateOrderDto, userId);
     }
 
     // EndPoint para eliminar una orden
     @Delete(':id')
-    async delete(@Param('id', ParseIntPipe) id: number): Promise<Order> {
+    async delete(@Param('id', ParseIntPipe) id: number, @Req() req): Promise<Order> {
+        const userId = req.user.id; // Obtener el ID del usuario de la solicitud
+        if (!userId) throw new BadRequestException('Usuario Id no proporcionado para esta operacion');
+
         // Validar que el id sea proporcionado
         if (!id) throw new BadRequestException('Id es requerido.');
 
         // Verificar que la orden exista
-        const order = await this.ordersService.findOne(id);
+        const order = await this.ordersService.findOne(id, userId);
 
         // Validación si no se encuentra la orden
         if (!order) throw new BadRequestException('Orden no encontrada.');
 
-        return await this.ordersService.delete(id);
+        return await this.ordersService.delete(id, userId);
     }
 }

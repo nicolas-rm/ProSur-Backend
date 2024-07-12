@@ -31,7 +31,8 @@ async function seed() {
                 permissions: {
                     create: [
                         { canRead: true, canWrite: true, entity: 'Item', roleId: adminRole.id }, // Permiso para leer y escribir en Items
-                        { canRead: true, canWrite: false, entity: 'Order', roleId: adminRole.id }, // Permiso solo para leer en Orders
+                        { canRead: true, canWrite: true, entity: 'Order', roleId: adminRole.id }, // Permiso solo para leer en Orders
+                        { canRead: true, canWrite: true, entity: 'Category', roleId: adminRole.id }, // Permiso solo para leer en Categories
                     ],
                 },
             },
@@ -52,7 +53,9 @@ async function seed() {
                 },
                 permissions: {
                     create: [
-                        { canRead: true, canWrite: false, entity: 'Item', roleId: userRole.id }, // Permiso solo para leer en Items
+                        { canRead: true, canWrite: true, entity: 'Item', roleId: adminRole.id }, // Permiso para leer y escribir en Items
+                        { canRead: true, canWrite: true, entity: 'Order', roleId: adminRole.id }, // Permiso solo para leer en Orders
+                        { canRead: true, canWrite: true, entity: 'Category', roleId: adminRole.id }, // Permiso solo para leer en Categories
                     ],
                 },
             },

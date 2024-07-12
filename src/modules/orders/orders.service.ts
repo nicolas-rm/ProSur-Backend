@@ -9,9 +9,10 @@ export class OrdersService {
     constructor(private prisma: PrismaService) {}
 
     // Método para obtener todas las órdenes
-    async findAll(): Promise<Order[]> {
+    async findAll(userId: number): Promise<Order[]> {
         try {
             return await this.prisma.order.findMany({
+                where: { userId },
                 orderBy: { id: 'desc' },
                 include: { items: true, user: true },
             });
@@ -27,10 +28,10 @@ export class OrdersService {
     }
 
     // Método para obtener una orden por id
-    async findOne(id: number): Promise<Order> {
+    async findOne(id: number, userId: number): Promise<Order> {
         try {
             const order = await this.prisma.order.findUnique({
-                where: { id },
+                where: { id, userId },
                 include: { items: true, user: true },
             });
 
@@ -51,13 +52,13 @@ export class OrdersService {
     }
 
     // Método para crear una orden
-    async create(createOrderDto: CreateOrderDTO): Promise<Order> {
+    async create(createOrderDto: CreateOrderDTO, userId: number): Promise<Order> {
         try {
             const result = await this.prisma.$transaction(async (prisma) => {
                 const createdOrder = await prisma.order.create({
                     data: {
                         total: createOrderDto.total,
-                        userId: createOrderDto.userId,
+                        userId: createOrderDto.userId || userId,
                         items: {
                             create: createOrderDto.items.map((item) => ({
                                 itemId: item.itemId,
@@ -85,14 +86,14 @@ export class OrdersService {
     }
 
     // Método para actualizar una orden
-    async update(id: number, updateOrderDto: UpdateOrderDTO): Promise<Order> {
+    async update(id: number, updateOrderDto: UpdateOrderDTO, userId: number): Promise<Order> {
         try {
             const result = await this.prisma.$transaction(async (prisma) => {
                 const updatedOrder = await prisma.order.update({
                     where: { id },
                     data: {
                         total: updateOrderDto.total,
-                        userId: updateOrderDto.userId,
+                        userId: updateOrderDto.userId || userId,
                         items: {
                             deleteMany: { orderId: id },
                             create: updateOrderDto.items?.map((item) => ({
@@ -125,13 +126,13 @@ export class OrdersService {
     }
 
     // Método para eliminar una orden
-    async delete(id: number): Promise<Order> {
+    async delete(id: number, userId: number): Promise<Order> {
         try {
             console.log('Id a eliminar');
             console.log(id);
             const result = await this.prisma.$transaction(async (prisma) => {
                 const deletedOrder = await prisma.order.delete({
-                    where: { id },
+                    where: { id, userId },
                 });
 
                 if (!deletedOrder) {

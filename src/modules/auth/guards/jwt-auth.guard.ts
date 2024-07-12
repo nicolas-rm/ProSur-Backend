@@ -42,6 +42,17 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
                 }
             }
 
+            // Agregar el usuario a la solicitud
+            this.logger.log('Token válido');
+            this.logger.log(`Usuario ID: ${decodedToken.userId}`);
+            console.log(decodedToken);
+            const user = await this.authService.findAuth(decodedToken.sub);
+            if (!user) {
+                throw new UnauthorizedException('Usuario no encontrado');
+            }
+
+            request.user = user;
+
             return super.canActivate(context) as Promise<boolean>;
         } catch (err) {
             this.logger.error(`Error de autenticación: ${err.message}`);

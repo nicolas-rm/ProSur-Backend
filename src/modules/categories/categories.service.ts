@@ -11,9 +11,10 @@ export class CategoriesService {
     constructor(private prisma: PrismaService) {}
 
     // Metodo para obtener todos las categorias
-    async findAll(): Promise<Category[]> {
+    async findAll(userId: number): Promise<Category[]> {
         try {
             return await this.prisma.category.findMany({
+                where: { userId },
                 orderBy: { id: 'desc' },
             });
         } catch (error) {
@@ -28,9 +29,9 @@ export class CategoriesService {
     }
 
     // Metodo para obtener un categoria por id
-    async findOne(id: number): Promise<Category> {
+    async findOne(id: number, userId: number): Promise<Category> {
         try {
-            const category = await this.prisma.category.findUnique({ where: { id } });
+            const category = await this.prisma.category.findUnique({ where: { id, userId } });
 
             if (!category) {
                 throw new NotFoundException(`Categoria con id: ${id} no encontrado.`);
@@ -49,12 +50,12 @@ export class CategoriesService {
     }
 
     // Metodo para crear un categoria
-    async create(category: CreateCategoryDto): Promise<Category> {
+    async create(category: CreateCategoryDto, userId: number): Promise<Category> {
         try {
             // Transacción para crear un categoria
             const result = await this.prisma.$transaction(async (prisma) => {
                 // Crear categoria
-                const createdCategory = await prisma.category.create({ data: category });
+                const createdCategory = await prisma.category.create({ data: { ...category, userId } });
 
                 return createdCategory;
             });
@@ -72,13 +73,13 @@ export class CategoriesService {
     }
 
     // Metodo para actualizar un categoria
-    async update(id: number, updateData: UpdateCategoryDto): Promise<Category> {
+    async update(id: number, updateData: UpdateCategoryDto, userId: number): Promise<Category> {
         try {
             // Transacción para actualizar un categoria
             const result = await this.prisma.$transaction(async (prisma) => {
                 // Actualizar categoria
                 const updatedCategory = await prisma.category.update({
-                    where: { id },
+                    where: { id, userId },
                     data: updateData,
                 });
 
@@ -103,12 +104,12 @@ export class CategoriesService {
     }
 
     // Metodo para eliminar un categoria
-    async delete(id: number): Promise<Category> {
+    async delete(id: number, userId: number): Promise<Category> {
         try {
             // Transacción para eliminar un categoria
             const result = await this.prisma.$transaction(async (prisma) => {
                 // Eliminar categoria
-                const deletedCategory = await prisma.category.delete({ where: { id } });
+                const deletedCategory = await prisma.category.delete({ where: { id, userId } });
 
                 // Si no se elimina el categoria, se lanza una excepción
                 if (!deletedCategory) {

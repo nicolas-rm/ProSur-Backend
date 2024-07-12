@@ -122,7 +122,7 @@ export class AuthService {
                     },
                 });
 
-                // Asignar permisos únicos al usuario
+                // Asignar permisos al usuario
                 const permissions = [
                     { canRead: true, canWrite: true, entity: 'Category' },
                     { canRead: true, canWrite: true, entity: 'Item' },
@@ -134,7 +134,7 @@ export class AuthService {
                         data: {
                             ...permission,
                             userId: user.id,
-                            roleId: 1, // Asumiendo que el rol Admin es id 1, puedes ajustar según necesites
+                            roleId: 1, // Asumiendo que el rol Admin
                         },
                     });
                 }
@@ -201,6 +201,7 @@ export class AuthService {
         }
     }
 
+    // Método para validar un token JWT
     validateToken(token: string): Observable<any> {
         try {
             const decodedToken = this.jwtService.verify(token);
@@ -210,20 +211,23 @@ export class AuthService {
         }
     }
 
+    // Método para verificar si un token JWT ha expirado
     isTokenExpired(decodedToken: any): boolean {
         const now = Math.floor(Date.now() / 1000);
         return decodedToken.exp < now;
     }
 
+    // Método para verificar si un token JWT está dentro del periodo de gracia
     isWithinGracePeriod(decodedToken: any): boolean {
         const now = Math.floor(Date.now() / 1000);
         const expiredTime = decodedToken.exp;
         return now - expiredTime <= this.gracePeriodMinutes * 60;
     }
 
+    // Método para renovar un token JWT
     renewToken(userId: string): Observable<string> {
         const payload = { userId };
-        const newToken = this.jwtService.sign(payload, { expiresIn: '1h' }); // Configura el tiempo de expiración según tus necesidades
+        const newToken = this.jwtService.sign(payload, { expiresIn: '1h' });
         return of(newToken);
     }
 }
