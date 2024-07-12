@@ -16,6 +16,12 @@ export class OrdersService {
                 include: { items: true, user: true },
             });
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Obtener órdenes falló.');
         }
     }
@@ -34,6 +40,12 @@ export class OrdersService {
 
             return order;
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Obtener orden falló.');
         }
     }
@@ -49,6 +61,8 @@ export class OrdersService {
                         items: {
                             create: createOrderDto.items.map((item) => ({
                                 itemId: item.itemId,
+                                price: item.price,
+                                quantity: item.quantity,
                             })),
                         },
                     },
@@ -60,6 +74,12 @@ export class OrdersService {
 
             return result;
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Crear orden falló.');
         }
     }
@@ -77,6 +97,8 @@ export class OrdersService {
                             deleteMany: { orderId: id },
                             create: updateOrderDto.items?.map((item) => ({
                                 itemId: item.itemId,
+                                price: item.price,
+                                quantity: item.quantity,
                             })),
                         },
                     },
@@ -92,6 +114,12 @@ export class OrdersService {
 
             return result;
         } catch (error) {
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Actualizar orden falló.');
         }
     }
@@ -99,10 +127,11 @@ export class OrdersService {
     // Método para eliminar una orden
     async delete(id: number): Promise<Order> {
         try {
+            console.log('Id a eliminar');
+            console.log(id);
             const result = await this.prisma.$transaction(async (prisma) => {
                 const deletedOrder = await prisma.order.delete({
                     where: { id },
-                    include: { items: true, user: true },
                 });
 
                 if (!deletedOrder) {
@@ -114,6 +143,14 @@ export class OrdersService {
 
             return result;
         } catch (error) {
+            console.log('Error al eliminar');
+            console.log(error);
+            // Cualquier error que no sea NotFoundException se maneja como BadRequestException
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            // Mensaje de error personalizado
             throw new BadRequestException('Eliminar orden falló.');
         }
     }

@@ -101,21 +101,54 @@ export class AuthService {
                 // Crear usuario
                 const user = await prisma.user.create({
                     data: {
-                        ...userDto,
+                        email: userDto.email,
+                        name: userDto.name,
+                        lastName: userDto.lastName,
                         password: hashedPassword,
                     },
+                    include: { roles: true, permissions: true },
                 });
+
+                // Asignar roles al usuario
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: {
+                        roles: {
+                            connect: [
+                                { id: 1 }, // Role Admin
+                                { id: 2 }, // Role User
+                            ],
+                        },
+                    },
+                });
+
+                // Asignar permisos únicos al usuario
+                const permissions = [
+                    { canRead: true, canWrite: true, entity: 'Category' },
+                    { canRead: true, canWrite: true, entity: 'Item' },
+                    { canRead: true, canWrite: true, entity: 'Order' },
+                ];
+
+                for (const permission of permissions) {
+                    await prisma.permission.create({
+                        data: {
+                            ...permission,
+                            userId: user.id,
+                            roleId: 1, // Asumiendo que el rol Admin es id 1, puedes ajustar según necesites
+                        },
+                    });
+                }
 
                 return user;
             });
 
             return result;
         } catch (error) {
+            console.log('Fallo al registrar usuario:', error);
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {
                 throw error;
             }
-
             // Mensaje de error personalizado
             throw new BadRequestException('Registrar usuario falló.');
         }
