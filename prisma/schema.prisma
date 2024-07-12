@@ -57,6 +57,7 @@ model OrderItem {
     itemId    Int
     order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     orderId   Int
+    quantity  Int
 }
 
 model Role {
