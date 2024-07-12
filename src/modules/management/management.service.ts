@@ -54,13 +54,69 @@ export class ManagementService {
                 take: 3,
             });
 
-            return report;
+            // Obtener los datos de los productos
+            const products = await this.prisma.item.findMany({
+                where: { id: { in: report.map((item) => item.itemId) } },
+            });
+
+            // Mapear los datos de los productos
+            const mappedReport = report.map((item) => {
+                const product = products.find((product) => product.id === item.itemId);
+
+                return {
+                    ...item,
+                    product,
+                };
+            });
+
+            // Retornar el reporte
+            return mappedReport;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
             }
 
             throw new BadRequestException('Obtener items mas vendidos falló.');
+        }
+    }
+
+    // Obtener ventas por productos
+    async getSalesByProduct() {
+        try {
+            const report = await this.prisma.orderItem.groupBy({
+                by: ['itemId'],
+                _sum: {
+                    orderId: true,
+                },
+                orderBy: {
+                    _sum: {
+                        quantity: 'desc',
+                    },
+                },
+            });
+
+            // Obtener los datos de los productos
+            const products = await this.prisma.item.findMany({
+                where: { id: { in: report.map((item) => item.itemId) } },
+            });
+
+            // Mapear los datos de los productos
+            const mappedReport = report.map((item) => {
+                const product = products.find((product) => product.id === item.itemId);
+
+                return {
+                    ...item,
+                    product,
+                };
+            });
+
+            return mappedReport;
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            throw new BadRequestException('Obtener ventas por productos falló.');
         }
     }
 }

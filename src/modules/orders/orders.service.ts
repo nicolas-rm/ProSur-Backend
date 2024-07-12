@@ -54,7 +54,11 @@ export class OrdersService {
     // Método para crear una orden
     async create(createOrderDto: CreateOrderDTO, userId: number): Promise<Order> {
         try {
+            console.log('Datos a crear');
+            console.log(createOrderDto);
+
             const result = await this.prisma.$transaction(async (prisma) => {
+                // Crear la orden
                 const createdOrder = await prisma.order.create({
                     data: {
                         total: createOrderDto.total,
@@ -64,6 +68,7 @@ export class OrdersService {
                                 itemId: item.itemId,
                                 price: item.price,
                                 quantity: item.quantity,
+                                total: item.price * item.quantity,
                             })),
                         },
                     },
@@ -75,6 +80,8 @@ export class OrdersService {
 
             return result;
         } catch (error) {
+            console.log('Error al crear');
+            console.log(error);
             // Cualquier error que no sea NotFoundException se maneja como BadRequestException
             if (error instanceof NotFoundException) {
                 throw error;
@@ -100,6 +107,7 @@ export class OrdersService {
                                 itemId: item.itemId,
                                 price: item.price,
                                 quantity: item.quantity,
+                                total: item.price * item.quantity,
                             })),
                         },
                     },

@@ -58,6 +58,8 @@ model OrderItem {
     order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     orderId   Int
     quantity  Int
+    price     Float
+    total     Float
 }
 
 model Role {

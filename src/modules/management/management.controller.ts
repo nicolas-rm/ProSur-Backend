@@ -1,29 +1,38 @@
-// src/items/items.controller.ts
+import { Controller, Get, BadRequestException, Query } from '@nestjs/common';
 
-// NestJS
-import { Controller, /* Req, Get, Post, Put, Delete, Param, Body, ParseIntPipe, BadRequestException, */ UseGuards } from '@nestjs/common';
-
-// Servicios
 import { ManagementService } from './management.service';
 
-// Modelos
-// import { Item } from '../../shared/models/index.models';
-
-// DTOs
-// import { UpdateItemDto } from './dtos/update-item';
-// import { CreateItemDto } from './dtos/create-item';
-
-// Guards
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesAuthGuard } from '../auth/guards/roles-auth.guard';
-import { PermissionsAuthGuard } from '../auth/guards/permissions-auth.guard';
-
-// Decoradores
-// import { Permissions } from '../auth/decorators/permissions.decorator';
-
-@Controller('items')
-@UseGuards(JwtAuthGuard, RolesAuthGuard, PermissionsAuthGuard) // Proteger todos los métodos del controlador con JwtAuthGuard, RolesAuthGuard y PermissionsAuthGuard
 @Controller('management')
 export class ManagementController {
     constructor(private readonly managementService: ManagementService) {}
+
+    // Endpoint para obtener productos vendidos en un periodo de fechas
+    @Get('sold-products')
+    async getSoldProductsInPeriod(@Query('startDate' /* , ParseDatePipe */) startDate: Date, @Query('endDate' /* , ParseDatePipe */) endDate: Date) {
+        try {
+            return await this.managementService.getSoldProductsInPeriod(startDate, endDate);
+        } catch (error) {
+            throw new BadRequestException('Error al obtener productos vendidos en el periodo de fechas.');
+        }
+    }
+
+    // Endpoint para obtener los 3 productos más vendidos
+    @Get('top-3-sold-products')
+    async getTop3SoldProducts() {
+        try {
+            return await this.managementService.getTop3SoldProducts();
+        } catch (error) {
+            throw new BadRequestException('Error al obtener los 3 productos más vendidos.');
+        }
+    }
+
+    // Endpoint para obtener las ventas por productos
+    @Get('sales-by-product')
+    async getSalesByProduct() {
+        try {
+            return await this.managementService.getSalesByProduct();
+        } catch (error) {
+            throw new BadRequestException('Error al obtener las ventas por productos.');
+        }
+    }
 }
