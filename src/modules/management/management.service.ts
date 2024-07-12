@@ -11,12 +11,10 @@ export class ManagementService {
 
     // Metodo para Obtener productos vendidos en un periodo de fechas
     async getSoldProductsInPeriod(startDate: Date, endDate: Date) {
-        console.log('Consultado Informacion');
-        console.log(startDate);
-        console.log(endDate);
         try {
-            const where = startDate && endDate ? { order: { createdAt: { gte: startDate, lte: endDate } } } : {};
+            const where = startDate && endDate ? { order: { createdAt: { gte: new Date(startDate), lte: new Date(endDate) } } } : {};
 
+            console.log(where);
             const report = this.prisma.orderItem.findMany({
                 where,
                 include: {
